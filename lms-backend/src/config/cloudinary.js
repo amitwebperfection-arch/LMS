@@ -61,7 +61,7 @@ const uploadVideo = async (filePath, folder = 'lms/videos') => {
   }
 };
 
-// ✅ FIX: Add deleteMedia function (naam match karo)
+
 const deleteMedia = async (publicId, resourceType = 'image') => {
   try {
     if (!publicId) {
@@ -77,12 +77,12 @@ const deleteMedia = async (publicId, resourceType = 'image') => {
     return result;
   } catch (error) {
     console.error('Error deleting media from Cloudinary:', error);
-    // Don't throw error, just log it
+    
     return null;
   }
 };
 
-// Keep old function for backward compatibility
+
 const deleteFile = deleteMedia;
 
 const getSignedUrl = (publicId, options = {}) => {

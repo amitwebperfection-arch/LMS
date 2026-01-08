@@ -33,7 +33,7 @@ const createPaymentIntent = async ({ amount, currency = 'usd', user, order }) =>
   }
 };
 
-// Verify webhook signature
+
 const verifyWebhookSignature = (payload, signature) => {
   try {
     const event = stripe.webhooks.constructEvent(
@@ -47,7 +47,7 @@ const verifyWebhookSignature = (payload, signature) => {
   }
 };
 
-// Create refund
+
 const createRefund = async (paymentIntentId, amount = null) => {
   try {
     const refund = await stripe.refunds.create({

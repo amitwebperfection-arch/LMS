@@ -36,7 +36,6 @@ const createLesson = async (req, res) => {
 
     const newOrder = order !== undefined ? parseInt(order) : (lastLesson?.order || 0) + 1;
 
-    // ===== BASE LESSON DATA =====
     const lessonData = {
       title,
       section: sectionId,
@@ -47,7 +46,6 @@ const createLesson = async (req, res) => {
       type,
     };
 
-    // ===== HANDLE TYPE-SPECIFIC DATA =====
     if (type === 'video') {
       const videoFile = req.files?.['video']?.[0];
       if (!videoFile) {
@@ -101,7 +99,6 @@ const createLesson = async (req, res) => {
     const lesson = await Lesson.create(lessonData);
     console.log('Lesson created:', lesson._id);
 
-    // Update course total duration
     const allLessons = await Lesson.find({
       section: { $in: await Section.find({ course: section.course._id }).select('_id') },
     });
@@ -202,7 +199,7 @@ const updateLesson = async (req, res) => {
 
     const { type, quiz, content, resourceUrl, title, description, duration, isPreview } = req.body;
 
-    // Prepare update data
+    
     const updateData = {
       title: title || lesson.title,
       description: description || lesson.description,
@@ -210,17 +207,17 @@ const updateLesson = async (req, res) => {
       isPreview: isPreview === 'true' || isPreview === true || lesson.isPreview,
     };
 
-    // Only update type if provided
+    
     if (type) {
       updateData.type = type;
     }
 
-    // ===== HANDLE VIDEO UPDATE =====
+    
     if (type === 'video' || lesson.type === 'video') {
       const videoFile = req.files?.['video']?.[0];
 
       if (videoFile) {
-        // Delete old video
+        
         if (lesson.videoPublicId) {
           try {
             await deleteMedia(lesson.videoPublicId, 'video');
@@ -230,7 +227,7 @@ const updateLesson = async (req, res) => {
           }
         }
 
-        // Upload new video
+        
         console.log('Uploading new video...');
         const uploadResult = await uploadVideo(videoFile.path, 'lms/videos');
         updateData.videoUrl = uploadResult.url;
@@ -240,7 +237,7 @@ const updateLesson = async (req, res) => {
       }
     }
 
-    // ===== HANDLE QUIZ UPDATE =====
+    
     if (type === 'quiz') {
       if (quiz) {
         const quizData = typeof quiz === 'string' ? JSON.parse(quiz) : quiz;
@@ -252,12 +249,12 @@ const updateLesson = async (req, res) => {
         };
       }
       
-      // Clear video fields for quiz
+      
       updateData.videoUrl = undefined;
       updateData.videoPublicId = undefined;
     }
 
-    // ===== HANDLE READING/ASSIGNMENT UPDATE =====
+    
     if (type === 'reading' || type === 'assignment') {
       if (content) {
         updateData.content = content;
@@ -273,14 +270,14 @@ const updateLesson = async (req, res) => {
         console.log('Resource added:', resourceUrl);
       }
 
-      // Clear video fields for reading/assignment
+      
       updateData.videoUrl = undefined;
       updateData.videoPublicId = undefined;
     }
 
     console.log('Final update data:', updateData);
 
-    // Update lesson using direct update
+    
     Object.keys(updateData).forEach(key => {
       if (updateData[key] !== undefined) {
         lesson[key] = updateData[key];
@@ -291,7 +288,7 @@ const updateLesson = async (req, res) => {
 
     console.log('Lesson updated successfully:', lesson._id);
 
-    // Update course total duration
+    
     const allLessons = await Lesson.find({
       section: { $in: await Section.find({ course: lesson.section.course._id }).select('_id') },
     });
@@ -367,7 +364,7 @@ const deleteLesson = async (req, res) => {
       return errorResponse(res, 403, 'Unauthorized');
     }
 
-    // Delete video from Cloudinary if exists
+    
     if (lesson.videoPublicId) {
       try {
         await deleteMedia(lesson.videoPublicId, 'video');
@@ -378,7 +375,7 @@ const deleteLesson = async (req, res) => {
 
     await lesson.deleteOne();
 
-    // Update course total duration
+  
     const allLessons = await Lesson.find({
       section: { $in: await Section.find({ course: lesson.section.course._id }).select('_id') },
     });

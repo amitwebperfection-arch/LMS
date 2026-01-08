@@ -1,4 +1,3 @@
-// scripts/seedTemplates.js
 const mongoose = require('mongoose');
 const Resume = require('../src/models/Resume.model');
 const User = require('../src/models/User.model');
@@ -294,18 +293,18 @@ const seedTemplates = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
 
-    // Find an admin user or create one
+  
     let adminUser = await User.findOne({ role: 'admin' });
     if (!adminUser) {
       console.log('No admin found. Please create an admin first.');
       process.exit(1);
     }
 
-    // Delete existing templates
+    
     await Resume.deleteMany({ isTemplate: true });
     console.log('Cleared existing templates');
 
-    // Create new templates
+    
     for (const template of templates) {
       await Resume.create({
         user: adminUser._id,

@@ -52,12 +52,10 @@ const completeLesson = async (req, res) => {
   try {
     const { courseId, lessonId, watchTime, watchPercentage, quizScore } = req.body;
     
-    // Validation
     if (!courseId || !lessonId) {
       return errorResponse(res, 400, 'Course ID and Lesson ID are required');
     }
 
-    // Find or create progress
     let progress = await Progress.findOne({
       user: req.user._id,
       course: courseId,
@@ -71,13 +69,11 @@ const completeLesson = async (req, res) => {
       });
     }
 
-    // Check if lesson already completed
     const lessonIndex = progress.completedLessons.findIndex(
       (cl) => cl.lesson.toString() === lessonId
     );
 
     if (lessonIndex === -1) {
-      // Add new completed lesson
       progress.completedLessons.push({
         lesson: lessonId,
         completedAt: new Date(),
@@ -86,7 +82,6 @@ const completeLesson = async (req, res) => {
         quizScore: quizScore || null,
       });
     } else {
-      // Update existing completed lesson
       progress.completedLessons[lessonIndex].watchTime = watchTime || progress.completedLessons[lessonIndex].watchTime;
       progress.completedLessons[lessonIndex].watchPercentage = watchPercentage || 100;
       if (quizScore !== undefined && quizScore !== null) {
@@ -94,7 +89,6 @@ const completeLesson = async (req, res) => {
       }
     }
 
-    // ✅ Calculate progress percentage
     const course = await Course.findById(courseId).populate({
       path: 'sections',
       populate: { path: 'lessons' }
@@ -118,7 +112,6 @@ const completeLesson = async (req, res) => {
 
     await progress.save();
 
-    // ✅ Update enrollment when course is completed
     if (progressPercentage === 100) {
       console.log('🎉 Course 100% completed, updating enrollment...');
       
@@ -140,7 +133,6 @@ const completeLesson = async (req, res) => {
       }
     }
 
-    // Update enrollment's last accessed lesson and progress
     await Enrollment.findOneAndUpdate(
       { user: req.user._id, course: courseId },
       {

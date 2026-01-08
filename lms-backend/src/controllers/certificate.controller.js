@@ -60,10 +60,9 @@ const generateCertificate = async (req, res) => {
       });
     }
 
-    // ✅ Populate instructor to get their name
     const course = await Course.findById(courseId)
       .select('title instructor certificateEnabled')
-      .populate('instructor', 'name email'); // ⭐ Populate instructor
+      .populate('instructor', 'name email'); 
 
     console.log('🎓 Course:', {
       title: course?.title,
@@ -90,12 +89,11 @@ const generateCertificate = async (req, res) => {
     await certificate.save();
     console.log('✅ Certificate saved with ID:', certificate.certificateId);
 
-    // ✅ Generate PDF with instructor details
     console.log('📄 Generating PDF with instructor:', course.instructor.name);
     const fileName = await generateCertificatePDF(
       certificate,
       req.user,
-      course // This now includes populated instructor
+      course 
     );
     console.log('✅ PDF generated:', fileName);
 
@@ -349,10 +347,10 @@ const downloadCertificate = async (req, res) => {
 
     const fileName = path.basename(certificate.pdfUrl);
     
-    // ✅ FIX: Correct path resolution
+    
     const filePath = path.join(
       __dirname,
-      '../../uploads/certificates', // Go up 2 levels from controllers folder
+      '../../uploads/certificates', 
       fileName
     );
 
@@ -453,7 +451,7 @@ const downloadStudentCertificate = async (req, res) => {
       return errorResponse(res, 404, 'Certificate not found');
     }
 
-    // Check if this instructor owns the course
+    
     if (certificate.course.instructor.toString() !== req.user._id.toString()) {
       return errorResponse(res, 403, 'You can only download certificates from your courses');
     }
@@ -464,7 +462,7 @@ const downloadStudentCertificate = async (req, res) => {
 
     const fileName = path.basename(certificate.pdfUrl);
     
-    // ✅ FIX: Correct path resolution
+    
     const filePath = path.join(
       __dirname,
       '../../uploads/certificates',

@@ -20,7 +20,7 @@ const submitContactMessage = async (req, res) => {
       message,
     });
 
-    // Send email to admin
+    
     try {
       await sendEmail({
         email: process.env.FROM_EMAIL, 
@@ -140,7 +140,6 @@ const replyToMessage = async (req, res) => {
       return errorResponse(res, 400, 'Reply message and user email are required');
     }
 
-    // Send reply email to user
     try {
       await sendEmail({
         email: userEmail,
@@ -159,7 +158,6 @@ const replyToMessage = async (req, res) => {
         `,
       });
 
-      // Update message status to replied
       await Contact.findByIdAndUpdate(id, { status: 'replied' });
 
       successResponse(res, 200, 'Reply sent successfully');

@@ -131,7 +131,6 @@ const getUser = async (req, res) => {
       return errorResponse(res, 404, 'User not found');
     }
 
-    // Get additional stats based on role
     let stats = {};
     if (user.role === ROLES.INSTRUCTOR) {
       const courses = await Course.countDocuments({ instructor: user._id });

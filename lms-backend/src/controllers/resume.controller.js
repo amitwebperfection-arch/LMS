@@ -1,4 +1,3 @@
-// controllers/resume.controller.js
 const Resume = require('../models/Resume.model');
 const { successResponse, errorResponse } = require('../utils/apiResponse');
 
@@ -57,7 +56,6 @@ const getResumeById = async (req, res) => {
       return errorResponse(res, 404, 'Resume not found');
     }
 
-    // Check if user owns the resume or it's public
     if (
       resume.user._id.toString() !== req.user._id.toString() &&
       !resume.isPublic
@@ -65,7 +63,6 @@ const getResumeById = async (req, res) => {
       return errorResponse(res, 403, 'Not authorized to view this resume');
     }
 
-    // Increment views
     resume.views += 1;
     await resume.save();
 
@@ -116,11 +113,9 @@ const useTemplate = async (req, res) => {
       return errorResponse(res, 404, 'Template not found');
     }
 
-    // Increment used count
     template.usedCount += 1;
     await template.save();
 
-    // Clone the template for the user
     const { title } = req.body;
     const newResume = await Resume.create({
       user: req.user._id,

@@ -207,7 +207,6 @@ const updateProfile = async (req, res) => {
     if (!user) {
       return errorResponse(res, 404, 'User not found');
     }
-    // Update basic fields
     if (name) {
       
       user.name = name;
@@ -220,7 +219,6 @@ const updateProfile = async (req, res) => {
       user.bio = bio;
     }
 
-    // Update preferences
     if (preferences) {
       
       user.preferences = {
@@ -229,7 +227,6 @@ const updateProfile = async (req, res) => {
       };
     }
 
-    // Update instructor profile (only for instructors)
     if (instructorProfile && user.role === 'instructor') {
       
       user.instructorProfile = {
@@ -238,17 +235,14 @@ const updateProfile = async (req, res) => {
       };
     }
 
-    // Update admin profile (only for admin)
     if (adminProfile && user.role === 'admin') {
       user.adminProfile = {
         ...user.adminProfile,
         ...adminProfile,
       };
     }
-    // Handle avatar upload
     if (req.file) {
       try {
-        // Delete old avatar if exists
         if (user.avatar?.publicId) {
           await deleteMedia(user.avatar.publicId, 'image');
         }

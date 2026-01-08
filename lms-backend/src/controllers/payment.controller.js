@@ -29,7 +29,6 @@ const handleWebhook = async (req, res) => {
       const paymentIntent = event.data.object;
       console.log('💳 Payment succeeded:', paymentIntent.id);
 
-      // Check if already processed
       const existingPayment = await Payment.findOne({
         stripePaymentIntentId: paymentIntent.id,
         status: PAYMENT_STATUS.SUCCESS,
@@ -40,7 +39,6 @@ const handleWebhook = async (req, res) => {
         return res.json({ received: true });
       }
 
-      // Find order
       const order = await Order.findOne({ 
         paymentIntentId: paymentIntent.id 
       })
@@ -54,7 +52,6 @@ const handleWebhook = async (req, res) => {
 
       console.log('📦 Order found:', order._id);
 
-      // Check if already enrolled
       const existingEnrollment = await Enrollment.findOne({
         user: order.user._id,
         course: order.course._id,
@@ -67,7 +64,6 @@ const handleWebhook = async (req, res) => {
         return res.json({ received: true });
       }
 
-      // Create Payment record
       await Payment.create({
         order: order._id,
         user: order.user._id,
@@ -81,13 +77,11 @@ const handleWebhook = async (req, res) => {
 
       console.log('✅ Payment record created');
 
-      // Update order
       order.status = ORDER_STATUS.COMPLETED;
       await order.save();
 
       console.log('✅ Order status updated');
 
-      // Calculate access expiry
       let accessExpiresAt = null;
       if (order.course.accessDuration !== 'lifetime') {
         const days = Number(order.course.accessDuration);
@@ -95,7 +89,6 @@ const handleWebhook = async (req, res) => {
         accessExpiresAt.setDate(accessExpiresAt.getDate() + days);
       }
 
-      // Create Enrollment
       const enrollment = await Enrollment.create({
         user: order.user._id,
         course: order.course._id,
@@ -106,7 +99,6 @@ const handleWebhook = async (req, res) => {
 
       console.log('✅ Enrollment created:', enrollment._id);
 
-      // Create Progress
       await Progress.create({
         user: order.user._id,
         course: order.course._id,
@@ -114,12 +106,10 @@ const handleWebhook = async (req, res) => {
 
       console.log('✅ Progress initialized');
 
-      // Update course enrollment count
       await Course.findByIdAndUpdate(order.course._id, {
         $inc: { enrollmentCount: 1 },
       });
 
-      // Update instructor stats
       if (order.course.instructor) {
         await User.findByIdAndUpdate(order.course.instructor, {
           $inc: { 'instructorProfile.totalStudents': 1 },
@@ -129,7 +119,6 @@ const handleWebhook = async (req, res) => {
       console.log('✅ Stats updated');
       console.log('🎉 Enrollment process completed successfully');
 
-      // Try to send email (optional)
       try {
         const { sendEnrollmentEmail } = require('../services/email.service');
         await sendEnrollmentEmail(order.user, order.course);

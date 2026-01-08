@@ -20,23 +20,19 @@ const createOrder = async (req, res) => {
       return errorResponse(res, 400, 'Please provide course ID');
     }
 
-    // Get course with instructor details
     const course = await Course.findById(courseId).populate('instructor');
     if (!course) {
       return errorResponse(res, 404, 'Course not found');
     }
 
-    // Check if course is available
     if (course.status !== 'published' || !course.isApproved) {
       return errorResponse(res, 400, 'Course is not available for enrollment');
     }
 
-    // Check enrollment limit
     if (course.maxEnrollments && course.enrollmentCount >= course.maxEnrollments) {
       return errorResponse(res, 400, 'Course has reached maximum enrollments');
     }
 
-    // Check if already enrolled
     const existingEnrollment = await Enrollment.findOne({
       user: req.user._id,
       course: courseId,
@@ -46,12 +42,12 @@ const createOrder = async (req, res) => {
       return errorResponse(res, 400, 'You are already enrolled in this course');
     }
 
-    // Calculate price
+   
     let finalPrice = course.discountPrice || course.price;
     let discount = 0;
     let coupon = null;
 
-    // Apply coupon if provided
+    
     if (couponCode) {
       coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
       
@@ -59,18 +55,18 @@ const createOrder = async (req, res) => {
         return errorResponse(res, 400, 'Invalid or expired coupon');
       }
 
-      // Check minimum purchase
+      
       if (coupon.minPurchase && finalPrice < coupon.minPurchase) {
         return errorResponse(res, 400, `Minimum purchase of $${coupon.minPurchase} required`);
       }
 
-      // Check if coupon applies to this course
+      
       if (coupon.applicableCourses?.length > 0 && 
           !coupon.applicableCourses.includes(courseId)) {
         return errorResponse(res, 400, 'Coupon is not applicable to this course');
       }
 
-      // Check if coupon applies to this category
+      
       if (coupon.applicableCategories?.length > 0 && 
           !coupon.applicableCategories.includes(course.category)) {
         return errorResponse(res, 400, 'Coupon is not applicable to this course category');
@@ -80,9 +76,9 @@ const createOrder = async (req, res) => {
       finalPrice = Math.max(0, finalPrice - discount);
     }
 
-    // FOR FREE COURSES - Complete enrollment immediately
+    
     if (course.isFree || finalPrice === 0) {
-      // Create completed order
+      
       const order = await Order.create({
         user: req.user._id,
         course: courseId,
@@ -95,7 +91,7 @@ const createOrder = async (req, res) => {
         currency: 'USD',
       });
 
-      // Calculate access expiry
+      
       let accessExpiresAt = null;
       if (course.accessDuration !== 'lifetime') {
         const days = Number(course.accessDuration);
@@ -103,7 +99,7 @@ const createOrder = async (req, res) => {
         accessExpiresAt.setDate(accessExpiresAt.getDate() + days);
       }
 
-      // Create enrollment
+      
       const enrollment = await Enrollment.create({
         user: req.user._id,
         course: courseId,
@@ -112,31 +108,31 @@ const createOrder = async (req, res) => {
         accessExpiresAt,
       });
 
-      // Initialize progress
+      
       await Progress.create({
         user: req.user._id,
         course: courseId,
       });
 
-      // Update course enrollment count
+      
       await Course.findByIdAndUpdate(courseId, {
         $inc: { enrollmentCount: 1 },
       });
 
-      // Update instructor stats
+      
       if (course.instructor) {
         await User.findByIdAndUpdate(course.instructor._id, {
           $inc: { 'instructorProfile.totalStudents': 1 },
         });
       }
 
-      // Update coupon usage
+     
       if (coupon) {
         coupon.usedCount += 1;
         await coupon.save();
       }
 
-      // Send enrollment email
+      
       try {
         await sendEnrollmentEmail(req.user, course);
       } catch (emailError) {
@@ -150,9 +146,8 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // FOR PAID COURSES - Create order and payment intent
+    
     try {
-      // Create pending order
       const order = await Order.create({
         user: req.user._id,
         course: courseId,
@@ -165,7 +160,6 @@ const createOrder = async (req, res) => {
         currency: 'usd',
       });
 
-      // Create payment intent
       const paymentIntent = await createPaymentIntent({
         amount: finalPrice,
         currency: 'usd',
@@ -173,11 +167,9 @@ const createOrder = async (req, res) => {
         order: order,
       });
 
-      // Update order with payment intent ID
       order.paymentIntentId = paymentIntent.id;
       await order.save();
 
-      // Update payment intent metadata
       await require('../config/stripe').stripe.paymentIntents.update(
         paymentIntent.id,
         {
@@ -189,7 +181,6 @@ const createOrder = async (req, res) => {
         }
       );
 
-      // Update coupon usage (will be counted when payment succeeds)
       if (coupon) {
         coupon.usedCount += 1;
         await coupon.save();
@@ -297,7 +288,6 @@ const getAllOrders = async (req, res) => {
 
     const total = await Order.countDocuments(query);
 
-    // Calculate stats
     const stats = await Order.aggregate([
       { $match: { status: ORDER_STATUS.COMPLETED } },
       {

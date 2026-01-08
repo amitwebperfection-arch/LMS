@@ -9,7 +9,7 @@ async function migrate() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
 
-    // Migrate Courses
+   
     await Course.updateMany(
       { isFree: { $exists: false } },
       { 
@@ -24,7 +24,7 @@ async function migrate() {
     );
     console.log('✅ Courses migrated');
 
-    // Migrate Users
+    
     await User.updateMany(
       { preferences: { $exists: false } },
       {
@@ -42,7 +42,7 @@ async function migrate() {
     );
     console.log('✅ Users migrated');
 
-    // Migrate Enrollments
+    
     await Enrollment.updateMany(
       { enrollmentSource: { $exists: false } },
       { $set: { enrollmentSource: 'web', lastAccessedAt: new Date() } }
