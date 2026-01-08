@@ -1,0 +1,13 @@
+{
+  "name": "nn-lms",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "backend": "cd lms-backend && npm run dev",
+    "frontend": "cd lms-frontend && npm run dev",
+    "dev": "concurrently -n BACKEND,FRONTEND -c red,blue \"npm run backend\" \"npm run frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
