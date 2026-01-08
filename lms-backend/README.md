@@ -1085,6 +1085,6 @@ npm view package-name
 
 ---
 
-**Last Updated:** January 2026 
+**Last Updated:** January 2026   
 **Version:** 1.0.0  
 **Node Version:** 18.x or higher
