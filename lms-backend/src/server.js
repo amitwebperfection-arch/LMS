@@ -6,7 +6,6 @@ const path = require('path');
 
 const PORT = process.env.PORT || 5000;
 
-// Create required directories
 const dirs = [
   'uploads',
   'uploads/certificates',
@@ -25,10 +24,9 @@ dirs.forEach((dir) => {
   }
 });
 
-// Connect to database
+
 connectDB();
 
-// Start server
 const server = app.listen(PORT, () => {
   console.log('========================================');
   console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode`);
@@ -37,7 +35,7 @@ const server = app.listen(PORT, () => {
   console.log('========================================');
 });
 
-// Handle unhandled promise rejections
+
 process.on('unhandledRejection', (err) => {
   console.error('❌ UNHANDLED REJECTION! 💥 Shutting down...');
   console.error(`Error: ${err.message}`);
@@ -47,7 +45,6 @@ process.on('unhandledRejection', (err) => {
   });
 });
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('❌ UNCAUGHT EXCEPTION! 💥 Shutting down...');
   console.error(`Error: ${err.message}`);
@@ -55,7 +52,6 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-// Handle SIGTERM
 process.on('SIGTERM', () => {
   console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
   server.close(() => {

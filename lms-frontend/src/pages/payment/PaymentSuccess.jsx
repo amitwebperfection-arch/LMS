@@ -7,7 +7,6 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to student dashboard after 3 seconds
     const timer = setTimeout(() => {
       navigate('/student/dashboard');
     }, 3000);

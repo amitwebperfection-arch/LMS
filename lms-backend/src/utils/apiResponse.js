@@ -1,4 +1,3 @@
-// Success Response
 const successResponse = (res, statusCode, message, data = null) => {
   const response = {
     success: true,
@@ -12,7 +11,6 @@ const successResponse = (res, statusCode, message, data = null) => {
   return res.status(statusCode).json(response);
 };
 
-// Error Response
 const errorResponse = (res, statusCode, message, errors = null) => {
   const response = {
     success: false,
@@ -26,7 +24,6 @@ const errorResponse = (res, statusCode, message, errors = null) => {
   return res.status(statusCode).json(response);
 };
 
-// Paginated Response
 const paginatedResponse = (res, statusCode, message, data, pagination) => {
   return res.status(statusCode).json({
     success: true,

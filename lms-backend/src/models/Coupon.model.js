@@ -53,7 +53,6 @@ const couponSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    // NEW FIELDS
     applicableCategories: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -84,7 +83,6 @@ const couponSchema = new mongoose.Schema(
   }
 );
 
-// Check if coupon is valid
 couponSchema.methods.isValid = function () {
   if (!this.isActive) return false;
   if (this.startDate > new Date()) return false;
@@ -93,7 +91,6 @@ couponSchema.methods.isValid = function () {
   return true;
 };
 
-// Calculate discount
 couponSchema.methods.calculateDiscount = function (price) {
   if (!this.isValid()) return 0;
 

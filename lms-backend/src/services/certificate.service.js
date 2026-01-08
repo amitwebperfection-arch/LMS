@@ -2,13 +2,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 
-/**
- * Generate Certificate PDF - Exact match to provided design
- * @param {Object} certificate - Certificate document
- * @param {Object} user - User document
- * @param {Object} course - Course document (with instructor populated)
- * @returns {Promise<string>} - Generated filename
- */
+
 const generateCertificatePDF = async (certificate, user, course) => {
   return new Promise((resolve, reject) => {
     try {
@@ -24,7 +18,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
 
       console.log('Generating PDF at:', filePath);
 
-      // Create PDF with exact A4 landscape dimensions
       const doc = new PDFDocument({
         size: 'A4',
         layout: 'landscape',
@@ -34,27 +27,19 @@ const generateCertificatePDF = async (certificate, user, course) => {
       const stream = fs.createWriteStream(filePath);
       doc.pipe(stream);
 
-      const pageWidth = doc.page.width;   // 841.89
-      const pageHeight = doc.page.height; // 595.28
+      const pageWidth = doc.page.width;   
+      const pageHeight = doc.page.height; 
 
-      // ========================================
-      // OUTER BLACK BORDER
-      // ========================================
       doc
         .rect(0, 0, pageWidth, pageHeight)
         .fill('#000000');
 
-      // ========================================
-      // WHITE INNER AREA
-      // ========================================
+
       doc
         .rect(20, 20, pageWidth - 40, pageHeight - 40)
         .fill('#FFFFFF');
 
-      // ========================================
-      // MAROON/DARK RED DECORATIVE BORDER
-      // ========================================
-      // Top border with triangular corners
+
       doc
         .polygon(
           [40, 40],
@@ -66,7 +51,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
         )
         .fill('#16a34a');
 
-      // Bottom border with triangular corners
       doc
         .polygon(
           [40, pageHeight - 40],
@@ -78,7 +62,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
         )
         .fill('#16a34a');
 
-      // Left border
       doc
         .polygon(
           [40, 40],
@@ -90,7 +73,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
         )
         .fill('#16a34a');
 
-      // Right border
       doc
         .polygon(
           [pageWidth - 40, 40],
@@ -102,40 +84,31 @@ const generateCertificatePDF = async (certificate, user, course) => {
         )
         .fill('#16a34a');
 
-      // ========================================
-      // GOLDEN CORNER TRIANGLES
-      // ========================================
-      // Top-left corner
+
       doc
         .polygon([40, 60], [80, 60], [80, 80], [60, 80], [40, 60])
         .fill('#FFD700');
 
-      // Top-right corner
+      
       doc
         .polygon([pageWidth - 40, 60], [pageWidth - 80, 60], [pageWidth - 80, 80], [pageWidth - 60, 80])
         .fill('#FFD700');
 
-      // Bottom-left corner
+      
       doc
         .polygon([40, pageHeight - 60], [80, pageHeight - 60], [80, pageHeight - 80], [60, pageHeight - 80])
         .fill('#FFD700');
 
-      // Bottom-right corner
+      
       doc
         .polygon([pageWidth - 40, pageHeight - 60], [pageWidth - 80, pageHeight - 60], [pageWidth - 80, pageHeight - 80], [pageWidth - 60, pageHeight - 80])
         .fill('#FFD700');
 
-      // ========================================
-      // INNER CONTENT BORDER
-      // ========================================
       doc
         .rect(90, 90, pageWidth - 180, pageHeight - 180)
         .lineWidth(2)
         .stroke('#16a34a');
 
-      // ========================================
-      // TITLE "CERTIFICATE"
-      // ========================================
       doc
         .fontSize(50)
         .font('Helvetica-Bold')
@@ -145,9 +118,7 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // SUBTITLE "OF COMPLETION"
-      // ========================================
+
       doc
         .fontSize(14)
         .font('Helvetica')
@@ -157,9 +128,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // "THIS CERTIFICATE IS PROUDLY PRESENTED TO"
-      // ========================================
       doc
         .fontSize(12)
         .font('Helvetica')
@@ -169,9 +137,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // STUDENT NAME (Large, Bold)
-      // ========================================
       doc
         .fontSize(36)
         .font('Helvetica-Bold')
@@ -181,9 +146,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // "for successfully completing the course"
-      // ========================================
       doc
         .fontSize(12)
         .font('Helvetica-Oblique')
@@ -193,9 +155,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // COURSE TITLE
-      // ========================================
       doc
         .fontSize(18)
         .font('Helvetica-Bold')
@@ -204,10 +163,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           align: 'center',
           width: pageWidth - 200
         });
-
-      // ========================================
-      // INSTRUCTOR NAME
-      // ========================================
       const instructorName = course.instructor?.name || 'Course Instructor';
       
       doc
@@ -219,12 +174,8 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // BOTTOM SECTION - Three Columns
-      // ========================================
       const bottomY = 450;
       
-      // Left: DATE
       const leftX = 150;
       doc
         .moveTo(leftX, bottomY)
@@ -254,7 +205,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           align: 'center'
         });
 
-      // Center: INSTRUCTOR SIGNATURE
       const centerX = (pageWidth / 2) - 80;
       doc
         .moveTo(centerX, bottomY)
@@ -279,7 +229,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           align: 'center'
         });
 
-      // Right: PLATFORM SIGNATURE
       const rightX = pageWidth - 270;
       doc
         .moveTo(rightX, bottomY)
@@ -304,9 +253,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           align: 'center'
         });
 
-      // ========================================
-      // CERTIFICATE ID (Small at bottom)
-      // ========================================
       doc
         .fontSize(8)
         .font('Helvetica')
@@ -316,9 +262,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           width: pageWidth
         });
 
-      // ========================================
-      // VERIFICATION URL
-      // ========================================
       doc
         .fontSize(8)
         .fillColor('#fff')
@@ -329,9 +272,6 @@ const generateCertificatePDF = async (certificate, user, course) => {
           underline: true
         });
 
-      // ========================================
-      // FINALIZE PDF
-      // ========================================
       doc.end();
 
       stream.on('finish', () => {

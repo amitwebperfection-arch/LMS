@@ -1,36 +1,31 @@
 import axiosInstance from './axios';
 
-// Register
 export const register = async (userData) => {
   const response = await axiosInstance.post('/auth/register', userData);
   return response.data;
 };
 
-// Login
 export const login = async (credentials) => {
   const response = await axiosInstance.post('/auth/login', credentials);
   return response.data;
 };
 
-// Get current user
 export const getMe = async () => {
   const response = await axiosInstance.get('/auth/me');
   return response.data;
 };
 
-// Logout
 export const logout = async () => {
   const response = await axiosInstance.post('/auth/logout');
   return response.data;
 };
 
-// Forgot password
 export const forgotPassword = async (email) => {
   const response = await axiosInstance.post('/auth/forgot-password', { email });
   return response.data;
 };
 
-// Reset password
+
 export const resetPassword = async (token, newPassword) => {
   const response = await axiosInstance.post('/auth/reset-password', {
     token,

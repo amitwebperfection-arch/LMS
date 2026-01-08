@@ -40,7 +40,6 @@ const orderSchema = new mongoose.Schema(
       invoiceNumber: String,
       invoiceUrl: String,
     },
-    // NEW FIELDS
     paymentGateway: {
       type: String,
       enum: ['stripe', 'paypal', 'razorpay', 'free'],
@@ -65,7 +64,6 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-// Generate invoice number before saving
 orderSchema.pre('save', async function (next) {
   if (!this.invoice) this.invoice = {};
   if (!this.invoice.invoiceNumber) {

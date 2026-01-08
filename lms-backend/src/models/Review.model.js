@@ -33,7 +33,6 @@ const reviewSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // NEW FIELDS
     instructorReply: {
       message: String,
       repliedAt: Date,
@@ -56,10 +55,8 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-// One review per user per course
 reviewSchema.index({ user: 1, course: 1 }, { unique: true });
 
-// Update course rating after review save
 reviewSchema.post('save', async function () {
   const Course = mongoose.model('Course');
   

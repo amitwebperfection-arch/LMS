@@ -10,7 +10,6 @@ const Home = () => {
     <div className="min-h-screen">
       <Header />
 
-      {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-dark-900 dark:to-dark-800 py-20">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">

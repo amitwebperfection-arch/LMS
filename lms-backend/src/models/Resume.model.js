@@ -1,4 +1,3 @@
-// models/Resume.model.js
 const mongoose = require('mongoose');
 
 const resumeSchema = new mongoose.Schema(
@@ -43,7 +42,6 @@ const resumeSchema = new mongoose.Schema(
       enum: ['modern', 'classic', 'creative', 'minimal', 'professional', 'custom'],
       default: 'custom',
     },
-    // For template metadata
     formData: {
       name: String,
       email: String,
@@ -60,7 +58,6 @@ const resumeSchema = new mongoose.Schema(
   }
 );
 
-// Index for searching
 resumeSchema.index({ title: 'text', tags: 'text' });
 resumeSchema.index({ isTemplate: 1, isPublic: 1 });
 resumeSchema.index({ user: 1 });

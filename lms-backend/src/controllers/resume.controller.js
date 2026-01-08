@@ -148,7 +148,6 @@ const updateResume = async (req, res) => {
       return errorResponse(res, 404, 'Resume not found');
     }
 
-    // Check ownership
     if (resume.user.toString() !== req.user._id.toString()) {
       return errorResponse(res, 403, 'Not authorized to update this resume');
     }
@@ -184,7 +183,7 @@ const deleteResume = async (req, res) => {
       return errorResponse(res, 404, 'Resume not found');
     }
 
-    // Check ownership
+   
     if (resume.user.toString() !== req.user._id.toString()) {
       return errorResponse(res, 403, 'Not authorized to delete this resume');
     }

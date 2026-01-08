@@ -25,7 +25,6 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    // NEW FIELDS
     order: {
       type: Number,
       default: 0,
@@ -45,7 +44,6 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
-// Index for performance
 categorySchema.index({ order: 1, isActive: 1 });
 
 module.exports = mongoose.model('Category', categorySchema);

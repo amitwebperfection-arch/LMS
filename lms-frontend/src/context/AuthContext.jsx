@@ -4,7 +4,6 @@ import * as authAPI from '../api/auth.api';
 import { STORAGE_KEYS, ROLES } from '../utils/constants';
 import toast from 'react-hot-toast';
 export const AuthContext = createContext(null);
-// const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -12,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  // Load user from localStorage on mount
   useEffect(() => {
     const loadUser = async () => {
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
@@ -22,7 +20,6 @@ export const AuthProvider = ({ children }) => {
         try {
           setUser(JSON.parse(savedUser));
           setIsAuthenticated(true);
-          // Optionally fetch fresh user data
           const response = await authAPI.getMe();
           if (response.success) {
             setUser(response.data.user);
@@ -39,7 +36,6 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  // Login
   const login = async (credentials) => {
     try {
       const response = await authAPI.login(credentials);
@@ -47,17 +43,14 @@ export const AuthProvider = ({ children }) => {
       if (response.success) {
         const { user, token } = response.data;
         
-        // Save to localStorage
         localStorage.setItem(STORAGE_KEYS.TOKEN, token);
         localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
         
-        // Update state
         setUser(user);
         setIsAuthenticated(true);
         
         toast.success('Login successful!');
         
-        // Redirect based on role
         if (user.role === ROLES.ADMIN) {
           navigate('/admin/dashboard');
         } else if (user.role === ROLES.INSTRUCTOR) {
@@ -75,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register
   const register = async (userData) => {
     try {
       const response = await authAPI.register(userData);
@@ -83,17 +75,16 @@ export const AuthProvider = ({ children }) => {
       if (response.success) {
         const { user, token } = response.data;
         
-        // Save to localStorage
+        
         localStorage.setItem(STORAGE_KEYS.TOKEN, token);
         localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
         
-        // Update state
+      
         setUser(user);
         setIsAuthenticated(true);
         
         toast.success('Registration successful!');
         
-        // Redirect based on role
         if (user.role === ROLES.ADMIN) {
           navigate('/admin/dashboard');
         } else if (user.role === ROLES.INSTRUCTOR) {
@@ -111,18 +102,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout
   const logout = async () => {
     try {
       await authAPI.logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // Clear localStorage
       localStorage.removeItem(STORAGE_KEYS.TOKEN);
       localStorage.removeItem(STORAGE_KEYS.USER);
       
-      // Clear state
       setUser(null);
       setIsAuthenticated(false);
       
@@ -131,13 +119,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update user
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(updatedUser));
   };
 
-  // Check if user has role
   const hasRole = (role) => {
     return user?.role === role;
   };
@@ -157,7 +143,6 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Custom hook to use auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

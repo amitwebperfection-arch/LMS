@@ -1,4 +1,3 @@
-// Format currency
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -6,7 +5,6 @@ export const formatCurrency = (amount) => {
   }).format(amount);
 };
 
-// Format date
 export const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -15,7 +13,6 @@ export const formatDate = (date) => {
   });
 };
 
-// Format relative time
 export const formatRelativeTime = (date) => {
   const now = new Date();
   const then = new Date(date);
@@ -31,7 +28,6 @@ export const formatRelativeTime = (date) => {
   return 'Just now';
 };
 
-// Format duration (seconds to readable)
 export const formatDuration = (seconds) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -43,13 +39,11 @@ export const formatDuration = (seconds) => {
   return `${minutes}:${secs.toString().padStart(2, '0')}`;
 };
 
-// Truncate text
 export const truncateText = (text, maxLength = 100) => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
 };
 
-// Generate slug
 export const generateSlug = (text) => {
   return text
     .toLowerCase()
@@ -59,7 +53,6 @@ export const generateSlug = (text) => {
     .trim();
 };
 
-// Get initials from name
 export const getInitials = (name) => {
   if (!name) return '?';
   const parts = name.split(' ');
@@ -67,20 +60,17 @@ export const getInitials = (name) => {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 };
 
-// Validate email
 export const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
 
-// Get rating color
 export const getRatingColor = (rating) => {
   if (rating >= 4.5) return 'text-green-600';
   if (rating >= 3.5) return 'text-yellow-600';
   return 'text-orange-600';
 };
 
-// Get difficulty badge color
 export const getDifficultyColor = (difficulty) => {
   const colors = {
     beginner: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
@@ -91,7 +81,6 @@ export const getDifficultyColor = (difficulty) => {
   return colors[difficulty] || colors.all_levels;
 };
 
-// Get status badge color
 export const getStatusColor = (status) => {
   const colors = {
     draft: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
@@ -106,13 +95,11 @@ export const getStatusColor = (status) => {
   return colors[status] || colors.pending;
 };
 
-// Calculate discount percentage
 export const calculateDiscount = (originalPrice, discountPrice) => {
   if (!discountPrice || originalPrice <= discountPrice) return 0;
   return Math.round(((originalPrice - discountPrice) / originalPrice) * 100);
 };
 
-// Debounce function
 export const debounce = (func, wait) => {
   let timeout;
   return function executedFunction(...args) {
@@ -125,7 +112,6 @@ export const debounce = (func, wait) => {
   };
 };
 
-// Group items by key
 export const groupBy = (array, key) => {
   return array.reduce((result, item) => {
     const group = item[key];
@@ -137,12 +123,10 @@ export const groupBy = (array, key) => {
   }, {});
 };
 
-// Check if object is empty
 export const isEmpty = (obj) => {
   return Object.keys(obj).length === 0;
 };
 
-// Deep clone object
 export const deepClone = (obj) => {
   return JSON.parse(JSON.stringify(obj));
 };

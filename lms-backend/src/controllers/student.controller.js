@@ -12,26 +12,21 @@ const Category = require('../models/Category.model');
 // @access  Private/Student
 const getStudentDashboard = async (req, res) => {
   try {
-    // Total enrolled courses
     const totalEnrolled = await Enrollment.countDocuments({
       user: req.user._id,
     });
 
-    // Completed courses
     const completedCourses = await Enrollment.countDocuments({
       user: req.user._id,
       isCompleted: true,
     });
 
-    // In progress courses
     const inProgressCourses = totalEnrolled - completedCourses;
 
-    // Total certificates
     const totalCertificates = await Certificate.countDocuments({
       user: req.user._id,
     });
 
-    // Continue learning (recently accessed courses)
     const recentProgress = await Progress.find({
       user: req.user._id,
     })
@@ -46,7 +41,6 @@ const getStudentDashboard = async (req, res) => {
       .sort('-updatedAt')
       .limit(5);
 
-    // Recently enrolled courses
     const recentEnrollments = await Enrollment.find({
       user: req.user._id,
     })
@@ -183,7 +177,6 @@ const getMyCourseDetails = async (req, res) => {
       return errorResponse(res, 404, 'Enrollment not found');
     }
 
-    // Get progress
     const progress = await Progress.findOne({
       user: req.user._id,
       course: req.params.courseId,
@@ -270,26 +263,22 @@ const getMyCertificates = async (req, res) => {
 // @access  Private/Student
 const getLearningStatistics = async (req, res) => {
   try {
-    // Get all progress records
     const progressRecords = await Progress.find({
       user: req.user._id,
     });
 
-    // Total watch time (in hours)
     const totalWatchTime = progressRecords.reduce(
       (sum, p) => sum + (p.totalWatchTime || 0),
       0
     );
     const totalWatchTimeHours = Math.round(totalWatchTime / 3600);
 
-    // Average progress
     const avgProgress =
       progressRecords.length > 0
         ? progressRecords.reduce((sum, p) => sum + p.progressPercentage, 0) /
           progressRecords.length
         : 0;
 
-    // Courses by category
     const enrollments = await Enrollment.find({
       user: req.user._id,
     }).populate({
@@ -333,7 +322,7 @@ const getLearningStatistics = async (req, res) => {
 // @access  Private/Student
 const getStudentCategories = async (req, res) => {
   try {
-    const categories = await Category.find({}).sort('name'); // all categories
+    const categories = await Category.find({}).sort('name'); 
     res.status(200).json({ success: true, data: categories });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

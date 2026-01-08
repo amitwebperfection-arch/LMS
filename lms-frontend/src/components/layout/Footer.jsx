@@ -10,7 +10,6 @@ const Footer = () => {
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 
-          {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <BookOpen className="h-8 w-8 text-primary-600" />
@@ -21,7 +20,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Platform Links */}
           <div>
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Platform</h3>
             <ul className="space-y-2 text-sm">
@@ -31,7 +29,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support */}
           <div>
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Support</h3>
             <ul className="space-y-2 text-sm">
@@ -40,7 +37,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Legal */}
           <div>
             <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Legal</h3>
             <ul className="space-y-2 text-sm">
@@ -51,7 +47,6 @@ const Footer = () => {
 
         </div>
 
-        {/* Copyright */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
           <p>&copy; 2026 LMS Platform. All rights reserved.</p> 
         </div>

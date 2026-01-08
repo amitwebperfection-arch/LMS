@@ -43,7 +43,6 @@ const paymentSchema = new mongoose.Schema(
       type: Map,
       of: String,
     },
-    // NEW FIELDS
     gatewayResponse: {
       type: mongoose.Schema.Types.Mixed,
     },

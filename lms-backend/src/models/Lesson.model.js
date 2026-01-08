@@ -21,7 +21,6 @@ const lessonSchema = new mongoose.Schema(
       enum: ['video', 'quiz', 'assignment', 'reading'],
       default: 'video',
     },
-    // ===== VIDEO FIELDS =====
     videoUrl: {
       type: String,
       required: function () {
@@ -29,8 +28,6 @@ const lessonSchema = new mongoose.Schema(
       },
     },
     videoPublicId: String,
-    
-    // ===== COMMON FIELDS =====
     duration: {
       type: Number,
       default: 0,
@@ -44,8 +41,6 @@ const lessonSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    
-    // ===== READING/ASSIGNMENT FIELDS =====
     content: {
       type: String,
       maxlength: [10000, 'Content cannot be more than 10000 characters'],
@@ -61,8 +56,6 @@ const lessonSchema = new mongoose.Schema(
         },
       },
     ],
-    
-    // ===== QUIZ FIELDS =====
     quiz: {
       questions: [
         {
@@ -79,8 +72,6 @@ const lessonSchema = new mongoose.Schema(
         max: 100,
       },
     },
-    
-    // ===== ADDITIONAL FIELDS =====
     isLocked: {
       type: Boolean,
       default: false,
@@ -102,8 +93,6 @@ const lessonSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-// Index for sorting
 lessonSchema.index({ section: 1, order: 1 });
 
 module.exports = mongoose.model('Lesson', lessonSchema);

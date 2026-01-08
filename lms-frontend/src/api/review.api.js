@@ -1,6 +1,5 @@
 import axiosInstance from './axios';
 
-// Student Review Functions
 export const addReview = async (reviewData) => {
   const response = await axiosInstance.post('/reviews', reviewData);
   return response.data;
@@ -26,7 +25,6 @@ export const deleteReview = async (id) => {
   return response.data;
 };
 
-// Instructor Review Functions
 export const getInstructorReviews = async (params) => {
   const response = await axiosInstance.get('/reviews/instructor/courses', { params });
   return response.data;
@@ -37,7 +35,6 @@ export const replyToReview = async (reviewId, replyData) => {
   return response.data;
 };
 
-// Admin Review Functions
 export const getAllReviews = async (params) => {
   const response = await axiosInstance.get('/reviews/admin/all', { params });
   return response.data;

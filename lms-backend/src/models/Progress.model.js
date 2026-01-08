@@ -59,7 +59,6 @@ const progressSchema = new mongoose.Schema(
   }
 );
 
-// Compound index
 progressSchema.index({ user: 1, course: 1 }, { unique: true });
 
 module.exports = mongoose.model('Progress', progressSchema);

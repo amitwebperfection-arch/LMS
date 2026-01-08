@@ -92,7 +92,6 @@ const courseSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // NEW FIELDS - MUST ADD
     subCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
@@ -125,7 +124,6 @@ const courseSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    // ADVANCED FIELDS
     seoTitle: String,
     seoDescription: String,
     seoKeywords: [String],
@@ -145,21 +143,18 @@ const courseSchema = new mongoose.Schema(
   }
 );
 
-// Virtual for sections
 courseSchema.virtual('sections', {
   ref: 'Section',
   localField: '_id',
   foreignField: 'course',
 });
 
-// Virtual for reviews
 courseSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
   foreignField: 'course',
 });
 
-// Check if enrollment limit reached
 courseSchema.methods.canEnroll = function () {
   if (this.maxEnrollments && this.enrollmentCount >= this.maxEnrollments) {
     return false;
@@ -167,7 +162,6 @@ courseSchema.methods.canEnroll = function () {
   return true;
 };
 
-// Index for search
 courseSchema.index({ title: 'text', description: 'text', tags: 'text' });
 courseSchema.index({ category: 1, subCategory: 1, isFeatured: 1 });
 

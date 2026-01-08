@@ -15,7 +15,7 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
-      {/* Sidebar */}
+      
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-dark-800 border-r border-gray-200 dark:border-dark-700 transform transition-transform duration-300 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -53,9 +53,9 @@ const AdminLayout = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Content */}
+      
       <div className="lg:ml-64">
-        {/* Header */}
+        
         <header className="sticky top-0 z-40 bg-white dark:bg-dark-800 border-b border-gray-200 dark:border-dark-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <button
@@ -88,11 +88,9 @@ const AdminLayout = ({ children }) => {
           </div>
         </header>
 
-        {/* Content */}
         <main className="p-6">{children}</main>
       </div>
 
-      {/* Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"

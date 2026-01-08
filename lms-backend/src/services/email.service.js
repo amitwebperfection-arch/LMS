@@ -2,7 +2,6 @@ const { sendEmail } = require('../config/mail');
 const nodemailer = require('nodemailer');
 
 
-// Welcome Email
 const sendWelcomeEmail = async (user) => {
   const html = `
     <h1>Welcome to LMS Platform!</h1>
@@ -21,7 +20,6 @@ const sendWelcomeEmail = async (user) => {
   });
 };
 
-// Email Verification
 const sendVerificationEmail = async (user, verificationUrl) => {
   const html = `
     <h1>Email Verification</h1>
@@ -43,7 +41,7 @@ const sendVerificationEmail = async (user, verificationUrl) => {
   });
 };
 
-// Password Reset Email
+
 const sendPasswordResetEmail = async (user, resetUrl) => {
   const html = `
     <h1>Password Reset Request</h1>
@@ -66,7 +64,7 @@ const sendPasswordResetEmail = async (user, resetUrl) => {
   });
 };
 
-// Enrollment Confirmation Email
+
 const sendEnrollmentEmail = async (user, course) => {
   const html = `
     <h1>Enrollment Confirmation</h1>
@@ -91,7 +89,7 @@ const sendCertificateEmail = async (user, course, pdfUrl) => {
   try {
     console.log('📧 Sending certificate email to:', user.email);
 
-    // ✅ Frontend certificate view URL
+    
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     const certificateViewUrl = `${frontendUrl}/student/certificates`;
     

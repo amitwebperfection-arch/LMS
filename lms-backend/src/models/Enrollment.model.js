@@ -36,7 +36,6 @@ const enrollmentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // NEW FIELDS
     lastAccessedLesson: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Lesson',
@@ -57,10 +56,8 @@ const enrollmentSchema = new mongoose.Schema(
   }
 );
 
-// Compound index to prevent duplicate enrollments
 enrollmentSchema.index({ user: 1, course: 1 }, { unique: true });
 
-// Check if access is valid
 enrollmentSchema.methods.hasAccess = function () {
   if (!this.accessExpiresAt) return true;
   return this.accessExpiresAt > new Date();

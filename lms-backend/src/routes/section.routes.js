@@ -11,7 +11,6 @@ const {
 const { protect } = require('../middleware/auth.middleware');
 const { instructorOnly } = require('../middleware/role.middleware');
 
-// All routes require auth and instructor role
 router.use(protect, instructorOnly);
 
 router.post('/', createSection);

@@ -6,14 +6,12 @@ const ThemeContext = createContext(null);
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
 
-  // Load theme from localStorage on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     } else {
-      // Check system preference
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const defaultTheme = prefersDark ? 'dark' : 'light';
       setTheme(defaultTheme);
@@ -21,7 +19,6 @@ export const ThemeProvider = ({ children }) => {
     }
   }, []);
 
-  // Toggle theme
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
@@ -29,7 +26,6 @@ export const ThemeProvider = ({ children }) => {
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
-  // Set specific theme
   const setSpecificTheme = (newTheme) => {
     setTheme(newTheme);
     localStorage.setItem(STORAGE_KEYS.THEME, newTheme);
@@ -46,7 +42,6 @@ export const ThemeProvider = ({ children }) => {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
-// Custom hook to use theme context
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {

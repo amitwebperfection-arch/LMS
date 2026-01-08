@@ -1,24 +1,19 @@
-// API Base URL
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// Stripe
 export const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
-// User Roles
 export const ROLES = {
   ADMIN: 'admin',
   INSTRUCTOR: 'instructor',
   STUDENT: 'student',
 };
 
-// Course Status
 export const COURSE_STATUS = {
   DRAFT: 'draft',
   PUBLISHED: 'published',
   ARCHIVED: 'archived',
 };
 
-// Difficulty Levels
 export const DIFFICULTY_LEVELS = {
   BEGINNER: 'beginner',
   INTERMEDIATE: 'intermediate',
@@ -26,7 +21,6 @@ export const DIFFICULTY_LEVELS = {
   ALL_LEVELS: 'all_levels',
 };
 
-// Order Status
 export const ORDER_STATUS = {
   PENDING: 'pending',
   COMPLETED: 'completed',
@@ -34,24 +28,20 @@ export const ORDER_STATUS = {
   REFUNDED: 'refunded',
 };
 
-// Review Status
 export const REVIEW_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
   REJECTED: 'rejected',
 };
 
-// Pagination
 export const ITEMS_PER_PAGE = 10;
 
-// Local Storage Keys
 export const STORAGE_KEYS = {
   TOKEN: 'lms_token',
   USER: 'lms_user',
   THEME: 'lms_theme',
 };
 
-// Navigation Items
 export const ADMIN_NAV = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: 'LayoutDashboard' },
   { name: 'Users', path: '/admin/users', icon: 'Users' },
@@ -91,7 +81,6 @@ export const STUDENT_NAV = [
   { name: 'About Us', path: '/student/aboutus', icon: 'Info' },
 ];
 
-// Error Messages
 export const ERROR_MESSAGES = {
   NETWORK_ERROR: 'Network error. Please check your connection.',
   UNAUTHORIZED: 'Session expired. Please login again.',
@@ -100,7 +89,6 @@ export const ERROR_MESSAGES = {
   SERVER_ERROR: 'Something went wrong. Please try again later.',
 };
 
-// Success Messages
 export const SUCCESS_MESSAGES = {
   LOGIN: 'Login successful!',
   LOGOUT: 'Logged out successfully!',
@@ -112,7 +100,6 @@ export const SUCCESS_MESSAGES = {
   REVIEW_ADDED: 'Review added successfully!',
 };
 
-// Certificate Templates
 export const CERTIFICATE_TEMPLATES = {
   DEFAULT: 'default',
   PREMIUM: 'premium',
@@ -120,7 +107,6 @@ export const CERTIFICATE_TEMPLATES = {
   PLATINUM: 'platinum',
 };
 
-// Lesson Types
 export const LESSON_TYPES = {
   VIDEO: 'video',
   QUIZ: 'quiz',
@@ -128,7 +114,6 @@ export const LESSON_TYPES = {
   READING: 'reading',
 };
 
-// Notification Priority
 export const NOTIFICATION_PRIORITY = {
   LOW: 'low',
   MEDIUM: 'medium',
@@ -136,14 +121,12 @@ export const NOTIFICATION_PRIORITY = {
   URGENT: 'urgent',
 };
 
-// Course Visibility
 export const COURSE_VISIBILITY = {
   PUBLIC: 'public',
   PRIVATE: 'private',
   UNLISTED: 'unlisted',
 };
 
-// Enrollment Sources
 export const ENROLLMENT_SOURCES = {
   WEB: 'web',
   MOBILE: 'mobile',
@@ -151,7 +134,6 @@ export const ENROLLMENT_SOURCES = {
   FREE: 'free',
 };
 
-// Payment Gateways
 export const PAYMENT_GATEWAYS = {
   STRIPE: 'stripe',
   PAYPAL: 'paypal',

@@ -12,7 +12,6 @@ const {
 const { protect } = require('../middleware/auth.middleware');
 const { studentOnly } = require('../middleware/role.middleware');
 
-// All routes require auth and student role
 router.use(protect, studentOnly);
 
 router.get('/dashboard', getStudentDashboard);

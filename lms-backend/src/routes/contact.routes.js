@@ -7,12 +7,10 @@ const {
   archiveMessage,
   deleteMessage,
   replyToMessage
-} = require('../controllers/Contact.controller');
+} = require('../controllers/contact.controller');
 
-// Public route
 router.post('/', submitContactMessage);
 
-// Admin routes (add auth middleware if needed)
 router.get('/', getAllContactMessages);
 router.post('/:id/reply', replyToMessage);
 router.patch('/:id/status', updateMessageStatus);

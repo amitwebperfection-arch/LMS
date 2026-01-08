@@ -20,7 +20,6 @@ const sectionSchema = new mongoose.Schema(
       type: String,
       maxlength: [1000, 'Description cannot be more than 1000 characters'],
     },
-    // NEW FIELDS
     totalDuration: {
       type: Number,
       default: 0,
@@ -37,14 +36,12 @@ const sectionSchema = new mongoose.Schema(
   }
 );
 
-// Virtual for lessons
 sectionSchema.virtual('lessons', {
   ref: 'Lesson',
   localField: '_id',
   foreignField: 'section',
 });
 
-// Calculate total duration
 sectionSchema.methods.calculateDuration = async function () {
   const Lesson = mongoose.model('Lesson');
   const lessons = await Lesson.find({ section: this._id });
@@ -52,7 +49,6 @@ sectionSchema.methods.calculateDuration = async function () {
   await this.save();
 };
 
-// Index for sorting
 sectionSchema.index({ course: 1, order: 1 });
 
 module.exports = mongoose.model('Section', sectionSchema);

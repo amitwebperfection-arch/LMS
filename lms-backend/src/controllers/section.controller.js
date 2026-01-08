@@ -10,7 +10,6 @@ const createSection = async (req, res) => {
   try {
     const { title, courseId, order, description } = req.body;
 
-    // Check if course exists and belongs to instructor
     const course = await Course.findOne({
       _id: courseId,
       instructor: req.user._id,
@@ -20,7 +19,6 @@ const createSection = async (req, res) => {
       return errorResponse(res, 404, 'Course not found or unauthorized');
     }
 
-    // Get the highest order number for this course
     const lastSection = await Section.findOne({ course: courseId })
       .sort('-order')
       .select('order');
@@ -51,15 +49,12 @@ const getSections = async (req, res) => {
       return errorResponse(res, 400, 'Course ID is required');
     }
 
-    // Fetch the course by ID first
     const course = await Course.findById(courseId);
 
-    // Verify course exists and instructor owns it
     if (!course || course.instructor.toString() !== req.user._id.toString()) {
       return errorResponse(res, 404, 'Course not found or unauthorized');
     }
 
-    // Fetch sections and populate lessons
     const sections = await Section.find({ course: courseId })
       .sort('order')
       .populate('lessons');
@@ -84,7 +79,6 @@ const getSection = async (req, res) => {
       return errorResponse(res, 404, 'Section not found');
     }
 
-    // Verify course ownership
     const course = await Course.findOne({
       _id: section.course._id,
       instructor: req.user._id,
@@ -111,7 +105,6 @@ const updateSection = async (req, res) => {
       return errorResponse(res, 404, 'Section not found');
     }
 
-    // Verify course ownership
     const course = await Course.findOne({
       _id: section.course._id,
       instructor: req.user._id,
@@ -137,13 +130,12 @@ const updateSection = async (req, res) => {
 // @access  Private/Instructor
 const reorderSections = async (req, res) => {
   try {
-    const { sections } = req.body; // Array of { id, order }
+    const { sections } = req.body; 
 
     if (!sections || !Array.isArray(sections)) {
       return errorResponse(res, 400, 'Sections array is required');
     }
 
-    // Verify all sections belong to instructor's course
     const sectionIds = sections.map((s) => s.id);
     const dbSections = await Section.find({ _id: { $in: sectionIds } }).populate('course');
 
@@ -158,7 +150,6 @@ const reorderSections = async (req, res) => {
       }
     }
 
-    // Update orders
     const updatePromises = sections.map((s) =>
       Section.findByIdAndUpdate(s.id, { order: s.order })
     );
@@ -182,7 +173,6 @@ const deleteSection = async (req, res) => {
       return errorResponse(res, 404, 'Section not found');
     }
 
-    // Verify course ownership
     const course = await Course.findOne({
       _id: section.course._id,
       instructor: req.user._id,
@@ -192,10 +182,8 @@ const deleteSection = async (req, res) => {
       return errorResponse(res, 403, 'Unauthorized');
     }
 
-    // Delete all lessons in this section
     await Lesson.deleteMany({ section: section._id });
 
-    // Delete section
     await section.deleteOne();
 
     successResponse(res, 200, 'Section and its lessons deleted successfully');
