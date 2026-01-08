@@ -1,0 +1,22 @@
+const express = require('express');
+const router = express.Router();
+const { 
+  submitContactMessage, 
+  getAllContactMessages,
+  updateMessageStatus,
+  archiveMessage,
+  deleteMessage,
+  replyToMessage
+} = require('../controllers/Contact.controller');
+
+// Public route
+router.post('/', submitContactMessage);
+
+// Admin routes (add auth middleware if needed)
+router.get('/', getAllContactMessages);
+router.post('/:id/reply', replyToMessage);
+router.patch('/:id/status', updateMessageStatus);
+router.patch('/:id/archive', archiveMessage);
+router.delete('/:id', deleteMessage);
+
+module.exports = router;

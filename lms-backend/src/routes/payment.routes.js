@@ -1,0 +1,14 @@
+
+
+const express = require('express');
+const router = express.Router();
+const { handleWebhook, verifyPayment } = require('../controllers/payment.controller');
+const { protect } = require('../middleware/auth.middleware');
+
+// Webhook route - NO AUTH, uses Stripe signature
+router.post('/webhook', handleWebhook);
+
+// Verify payment status
+router.get('/verify/:orderId', protect, verifyPayment);
+
+module.exports = router;
