@@ -16,7 +16,7 @@ const AdminResumeBuilder = () => {
     total: 0,
     pages: 0,
   });
-
+ 
   useEffect(() => {
     loadStats();
     loadResumes();

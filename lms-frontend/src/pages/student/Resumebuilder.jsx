@@ -252,7 +252,7 @@ const ResumeBuilder = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
   const handleUseTemplate = async (templateId) => {
     setLoading(true);

@@ -1,12 +1,27 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { changePassword, updateProfile } from '../../api/auth.api';
 import { User, Mail, Lock, Camera } from 'lucide-react';
 import { Loader } from '../../components/common/Loader';
 import toast from 'react-hot-toast';
+import DefaultAvatar from '../../assets/default-avatar.png';
+
 
 const Settings = () => {
+
   const { user, setUser } = useAuth();
+
+  const getAvatar = () => {
+    return user?.avatar?.url || DefaultAvatar;
+  };
+
+  const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
+
+  useEffect(() => {
+    setAvatarPreview(getAvatar());
+  }, [user]);
+
+
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -20,7 +35,7 @@ const Settings = () => {
     confirmPassword: '',
   });
   
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar?.url || null);
+  // const [avatarPreview, setAvatarPreview] = useState(user?.avatar?.url || null);
   const [avatarFile, setAvatarFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
@@ -168,6 +183,9 @@ const Settings = () => {
                       src={avatarPreview}
                       alt="Profile"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = DefaultAvatar;
+                      }}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">

@@ -12,6 +12,8 @@ import {
 import { getAllReviews, approveReview, rejectReview } from '../../api/review.api';
 import { Loader } from '../../components/common/Loader';
 import toast from 'react-hot-toast';
+import DefaultAvatar from '../../assets/default-avatar.png';
+
 
 const AdminReviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -123,8 +125,15 @@ const AdminReviews = () => {
               {/* Header */}
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-                    <User className="h-5 w-5 text-primary-600" />
+                  <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                    <img
+                      src={review.user?.avatar?.url || DefaultAvatar}
+                      alt={review.user?.name}
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.target.src = DefaultAvatar;
+                      }}
+                    />
                   </div>
                   <div>
                     <p className="font-semibold">{review.user?.name}</p>

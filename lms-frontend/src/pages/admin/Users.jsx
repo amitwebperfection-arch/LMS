@@ -7,6 +7,8 @@ import { ConfirmDialog } from '../../components/common/ConfirmDialog';
 import { Badge } from '../../components/common/Badge';
 import { formatDate } from '../../utils/helpers';
 import toast from 'react-hot-toast';
+import DefaultAvatar from '../../assets/default-avatar.png';
+
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -131,10 +133,15 @@ const Users = () => {
               <tr key={user._id}>
                 <td>
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
-                      <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">
-                        {user.name?.charAt(0)?.toUpperCase()}
-                      </span>
+                    <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-200 dark:bg-dark-700 flex items-center justify-center">
+                      <img
+                        src={user.avatar?.url || DefaultAvatar}
+                        alt={user.name}
+                        className="h-full w-full object-cover"
+                        onError={(e) => {
+                          e.target.src = DefaultAvatar;
+                        }}
+                      />
                     </div>
                     <span className="font-medium">{user.name}</span>
                   </div>

@@ -1,12 +1,25 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect  } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { changePassword, updateProfile } from '../../api/auth.api';
 import { User, Mail, Lock, Camera } from 'lucide-react';
 import { Loader } from '../../components/common/Loader';
 import toast from 'react-hot-toast';
+import DefaultAvatar from '../../assets/default-avatar.png';
+
 
 const InstructorProfile = () => {
   const { user, setUser } = useAuth();
+
+const getDefaultAvatar = () => user?.avatar?.url || DefaultAvatar;
+
+const [avatarPreview, setAvatarPreview] = useState(DefaultAvatar);
+
+useEffect(() => {
+  setAvatarPreview(getDefaultAvatar());
+}, [user]);
+
+
+
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -20,7 +33,7 @@ const InstructorProfile = () => {
     confirmPassword: '',
   });
   
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar?.url || null);
+  
   const [avatarFile, setAvatarFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
@@ -30,7 +43,6 @@ const InstructorProfile = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size should be less than 5MB');
         return;
@@ -50,104 +62,97 @@ const InstructorProfile = () => {
     }
   };
 
+  // ✅ Remove selected avatar
+  const handleRemoveAvatar = () => {
+    setAvatarFile(null);
+    setAvatarPreview(getDefaultAvatar());
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   // Handle profile update
   const handleProfileUpdate = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name || '');
+      formDataToSend.append('email', formData.email || '');
+      if (formData.phone) formDataToSend.append('phone', formData.phone);
+      if (formData.bio) formDataToSend.append('bio', formData.bio);
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('name', formData.name || '');
-    formDataToSend.append('email', formData.email || '');
-    if (formData.phone) formDataToSend.append('phone', formData.phone);
-    if (formData.bio) formDataToSend.append('bio', formData.bio);
+      if (avatarFile) {
+        formDataToSend.append('avatar', avatarFile);
+      }
 
-    if (avatarFile) {
-      formDataToSend.append('avatar', avatarFile);
+      const response = await updateProfile(formDataToSend);
+
+      if (response.success) {
+        setUser(response.data.user);
+        // ✅ Update preview with new avatar
+        setAvatarPreview(response.data.user?.avatar?.url || getDefaultAvatar());
+        toast.success('Profile updated successfully!');
+        setAvatarFile(null);
+      } else {
+        toast.error(response.message || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error details:', error);
+      const errorMessage = error.response?.data?.message 
+        || error.message 
+        || 'Failed to update profile';
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    for (let pair of formDataToSend.entries()) {
-    }
-
-    const response = await updateProfile(formDataToSend);
-
-
-    if (response.success) {
-      setUser(response.data.user);  
-      toast.success('Profile updated successfully!');
-      setAvatarFile(null);
-    } else {
-      toast.error(response.message || 'Failed to update profile');
-    }
-  } catch (error) {
-    console.error('Error details:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-    });
-
-    const errorMessage = error.response?.data?.message 
-      || error.message 
-      || 'Failed to update profile';
-    
-    toast.error(errorMessage);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   // Handle password change
   const handlePasswordChange = async (e) => {
-  e.preventDefault();
-  
-  // Extract password data from state
-  const { currentPassword, newPassword, confirmPassword } = passwordData;
+    e.preventDefault();
+    
+    const { currentPassword, newPassword, confirmPassword } = passwordData;
 
-  // Check if both passwords are provided
-  if (!currentPassword || !newPassword) {
-    toast.error('Both current and new passwords are required');
-    return;
-  }
-
-  // Ensure newPassword and confirmPassword match
-  if (newPassword !== confirmPassword) {
-    toast.error('Passwords do not match');
-    return;
-  }
-
-  // Check new password length
-  if (newPassword.length < 6) {
-    toast.error('Password must be at least 6 characters');
-    return;
-  }
-
-  setPasswordLoading(true);
-
-  try {
-    const response = await changePassword({
-      currentPassword,
-      newPassword,
-    });
-
-
-    if (response.success) {
-      toast.success('Password changed successfully!');
-      setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      });
+    if (!currentPassword || !newPassword) {
+      toast.error('Both current and new passwords are required');
+      return;
     }
-  } catch (error) {
-    console.error('❌ Password change error:', error);
-    toast.error(error.message || 'Failed to change password');
-  } finally {
-    setPasswordLoading(false);
-  }
-};
 
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+
+    setPasswordLoading(true);
+
+    try {
+      const response = await changePassword({
+        currentPassword,
+        newPassword,
+      });
+
+      if (response.success) {
+        toast.success('Password changed successfully!');
+        setPasswordData({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        });
+      }
+    } catch (error) {
+      console.error('❌ Password change error:', error);
+      toast.error(error.message || 'Failed to change password');
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6 w-full">
@@ -159,21 +164,19 @@ const InstructorProfile = () => {
           <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
           
           <form onSubmit={handleProfileUpdate} className="space-y-6">
-            {/* Avatar Upload */}
+            {/* Avatar Upload with Default */}
             <div className="flex flex-col items-center mb-6">
               <div className="relative group">
                 <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 dark:bg-dark-700 border-4 border-white dark:border-dark-800 shadow-lg">
-                  {avatarPreview ? (
-                    <img
-                      src={avatarPreview}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-16 h-16 text-gray-400" />
-                    </div>
-                  )}
+                  <img
+                    src={avatarPreview}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // ✅ Fallback if image fails to load
+                      e.target.src = getDefaultAvatar();
+                    }}
+                  />
                 </div>
                 
                 <button
@@ -198,6 +201,17 @@ const InstructorProfile = () => {
                 <br />
                 <span className="text-xs">Max size: 5MB (JPG, PNG, GIF)</span>
               </p>
+              
+              {/* ✅ Remove button for selected image */}
+              {avatarFile && (
+                <button
+                  type="button"
+                  onClick={handleRemoveAvatar}
+                  className="mt-2 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                >
+                  Remove selected image
+                </button>
+              )}
             </div>
 
             {/* Form Fields */}
@@ -272,7 +286,7 @@ const InstructorProfile = () => {
           </form>
         </div>
 
-        {/* Change Password */}
+        {/* Change Password - (Same as before) */}
         <div className="card w-full">
           <h2 className="text-xl font-semibold mb-6">Change Password</h2>
           

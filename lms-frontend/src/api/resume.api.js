@@ -1,4 +1,3 @@
-// api/resume.api.js
 import axiosInstance from './axios';
 
 // Create new resume
@@ -71,7 +70,7 @@ export default {
   getResumeById,
   getPublicTemplates,
   useTemplate,
-  updateResume,
+  updateResume, 
   deleteResume,
   getAllResumesAdmin,
   getResumeStats,

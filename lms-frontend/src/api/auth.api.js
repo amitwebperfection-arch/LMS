@@ -70,3 +70,7 @@ export const useAuth = () => {
   }
   return context;
 };
+
+const getDefaultAvatar = () => {
+  return user?.avatar?.url || DefaultAvatar;
+};

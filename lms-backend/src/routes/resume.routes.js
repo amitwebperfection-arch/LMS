@@ -14,17 +14,20 @@ const {
 } = require('../controllers/resume.controller');
 const { protect, authorize } = require('../middleware/auth.middleware');
 
-// Public/Student routes
-router.post('/', protect, createResume);
-router.get('/my-resumes', protect, getMyResumes);
-router.get('/templates', protect, getPublicTemplates);
-router.post('/use-template/:id', protect, useTemplate);
-router.get('/:id', protect, getResumeById);
-router.put('/:id', protect, updateResume);
-router.delete('/:id', protect, deleteResume);
-
-// Admin routes
-router.get('/admin/all', protect, authorize('admin'), getAllResumesAdmin);
+// Admin routes MUST come before :id routes
 router.get('/admin/stats', protect, authorize('admin'), getResumeStats);
+router.get('/admin/all', protect, authorize('admin'), getAllResumesAdmin);
+
+// Public/Protected routes
+router.get('/templates', protect, getPublicTemplates);
+router.get('/my-resumes', protect, getMyResumes);
+router.post('/', protect, createResume);
+router.post('/use-template/:id', protect, useTemplate);
+
+// Dynamic routes last
+router.route('/:id')
+  .get(protect, getResumeById)
+  .put(protect, updateResume)
+  .delete(protect, deleteResume);
 
 module.exports = router;
