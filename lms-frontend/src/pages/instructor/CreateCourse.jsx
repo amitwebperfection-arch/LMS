@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Video, Lock, Globe, Users, Award, DollarSign, X } from 'lucide-react';
+import { Upload, Video, Lock, Globe, Users, Award, DollarSign, X, ArrowRight, ArrowLeft   } from 'lucide-react';
 import { createCourse, getInstructorCategories } from '../../api/instructor.api';
 import { Loader } from '../../components/common/Loader';
 import toast from 'react-hot-toast';
@@ -690,13 +690,14 @@ const CreateCourse = () => {
         <div className="flex justify-between gap-4 sticky bottom-0 bg-gray-50 dark:bg-dark-900 py-4 -mx-4 px-4 border-t border-gray-200 dark:border-dark-700">
           <div>
             {step > 1 && (
-              <button
-                type="button"
-                onClick={prevStep}
-                className="btn btn-secondary"
-              >
-                ← Previous
-              </button>
+            <button
+              type="button"
+              onClick={prevStep}
+              className="btn btn-secondary inline-flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Previous
+            </button>
             )}
           </div>
           
@@ -713,9 +714,10 @@ const CreateCourse = () => {
               <button
                 type="button"
                 onClick={nextStep}
-                className="btn btn-primary"
+                className="btn btn-primary inline-flex items-center gap-2"
               >
-                Next Step →
+                Next Step
+                <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
               <button

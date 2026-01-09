@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { ADMIN_NAV } from '../../utils/constants';
-import { LogOut, Moon, Sun, Menu, X } from 'lucide-react';
+import { LogOut, Moon, Sun, Menu, X, GraduationCap } from 'lucide-react';
 import * as Icons from 'lucide-react';
 import { useState } from 'react';
 
@@ -22,8 +22,9 @@ const AdminLayout = ({ children }) => {
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="p-6 border-b border-gray-200 dark:border-dark-700">
-            <h1 className="text-2xl font-bold text-primary-600">LMS Admin</h1>
+          <div className="p-6 border-b border-gray-200 dark:border-dark-700 flex items-center gap-3">
+            <GraduationCap className="w-10 h-10 text-primary-600" />
+            <h1 className="text-2xl font-bold text-primary-600 whitespace-nowrap">LMS Admin</h1>
           </div>
 
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">

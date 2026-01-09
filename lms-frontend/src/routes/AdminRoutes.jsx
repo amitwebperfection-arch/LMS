@@ -11,6 +11,7 @@ import Message from '../pages/admin/Message';
 import AboutUs from '../pages/public/AboutUs';
 import AdminReviews from '../pages/admin/AdminReview';
 import AdminResumeBuilder from '../pages/admin/AdminResumebuilder';
+import DetailCourse from '../pages/admin/DetailCourse'
 
 
 
@@ -23,6 +24,7 @@ const AdminRoutes = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<Users />} />
         <Route path="courses" element={<Courses />} />
+        <Route path="courses/:id" element={<DetailCourse />} />
         <Route path="categories" element={<Categories />} />
         <Route path="orders" element={<Orders />} />
         <Route path="messages" element={<Message />} />

@@ -5,10 +5,16 @@ export const getInstructorDashboard = async () => {
   return response.data;
 };
 
+// export const getInstructorCourses = async (params) => {
+//   const response = await axiosInstance.get('/instructor/courses', { params });
+//   return response.data;
+// };
+
 export const getInstructorCourses = async (params) => {
   const response = await axiosInstance.get('/instructor/courses', { params });
   return response.data;
 };
+
 
 export const getInstructorCourse = async (id) => {
   const response = await axiosInstance.get(`/instructor/courses/${id}`);

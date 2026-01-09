@@ -12,6 +12,7 @@ import InstructorCertificates from '../pages/instructor/InstructorCertificates';
 import Contact from '../pages/public/Contact'
 import AboutUs from '../pages/public/AboutUs';
 import InstructorReviews from '../pages/instructor/InstructorReviews';
+import CourseDetail from '../pages/instructor/CourseDetail';
 
 const InstructorRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const InstructorRoutes = () => {
         <Route path="create-course" element={<CreateCourse />} />
         <Route path="edit-course/:id" element={<EditCourse />} />
         <Route path="/courses/:courseId/curriculum" element={<CourseCurriculum />} />
+        <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="earnings" element={<Earnings />} />
         <Route path="students" element={<Students />} />
         <Route path="contact" element={<Contact />} />

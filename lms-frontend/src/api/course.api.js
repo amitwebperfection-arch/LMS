@@ -117,6 +117,17 @@ export const applyCoupon = async (courseId, couponCode) => {
   return response.data;
 };
 
+export const getAdminCourse = async (id) => {
+  const { data } = await axiosInstance.get(`/admin/courses/${id}`);
+  return data;
+};
+
+export const getInstructorCourseDetails = async (id) => {
+  const { data } = await axiosInstance.get(`/instructor/courses/${id}/details`);
+  return data;
+};
+
+
 export default {
   getCourses,
   getCourse,
@@ -134,4 +145,6 @@ export default {
   checkEnrollmentEligibility,
   getCourseReviews,
   applyCoupon,
+  getAdminCourse,
+  getInstructorCourseDetails,
 };
