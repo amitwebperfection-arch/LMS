@@ -12,6 +12,7 @@ const {
   getInstructorDashboard,
   getProfile,
   updateProfile,
+  getCourseInstructorById,
 } = require('../controllers/instructor.controller');
 const { protect, authorize } = require('../middleware/auth.middleware');
 const { 
@@ -36,7 +37,7 @@ router.route('/courses/:id')
   .get(getInstructorCourse)
   .put(uploadCourseFiles, handleUploadError, updateCourse)
   .delete(deleteCourse);
-
+router.get('/courses/:id/details', getCourseInstructorById);
 router.put('/courses/:id/publish', toggleCourseStatus);
 
 router.get('/enrollments', getInstructorEnrollments);

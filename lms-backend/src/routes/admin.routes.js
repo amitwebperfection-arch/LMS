@@ -17,6 +17,7 @@ const {
   deleteCategory,
   getSalesReport,
   getUserReport,
+  getCourseById,
 } = require('../controllers/admin.controller');
 const { protect } = require('../middleware/auth.middleware');
 const { adminOnly } = require('../middleware/role.middleware');
@@ -36,6 +37,7 @@ router.put('/users/:id/role', updateUserRole);
 
 
 router.get('/courses', getAllCourses);
+router.get('/courses/:id', getCourseById);
 router.put('/courses/:id/approve', approveCourse);
 router.put('/courses/:id/reject', rejectCourse);
 router.delete('/courses/:id', deleteCourseAdmin);

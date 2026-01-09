@@ -477,6 +477,33 @@ const getUserReport = async (req, res) => {
   }
 };
 
+// @desc    Get single course by ID (admin)
+// @route   GET /api/admin/courses/:id
+// @access  Admin
+const getCourseById = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id)
+      .populate('instructor', 'name avatar bio instructorProfile')
+      .populate('category', 'name')
+      .populate('subCategory', 'name')
+      .populate({
+        path: 'sections',
+        populate: {
+          path: 'lessons',
+          select: 'title duration order isPreview type',
+        },
+      });
+
+    if (!course) {
+      return errorResponse(res, 404, 'Course not found');
+    }
+
+    successResponse(res, 200, 'Course fetched successfully', { course });
+  } catch (error) {
+    errorResponse(res, 500, error.message);
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getUsers,
@@ -494,4 +521,5 @@ module.exports = {
   deleteCategory,
   getSalesReport,
   getUserReport,
+  getCourseById,
 };

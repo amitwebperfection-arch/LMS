@@ -4,8 +4,10 @@ const Order = require('../models/Order.model');
 const User = require('../models/User.model');
 const { successResponse, errorResponse, paginatedResponse } = require('../utils/apiResponse');
 const { generateSlug } = require('../utils/slugify');
-const { uploadImage, uploadVideo } = require('../config/cloudinary'); // ADD uploadVideo here
+const { uploadImage, uploadVideo } = require('../config/cloudinary'); 
 const { COURSE_STATUS, PAGINATION } = require('../utils/constants');
+const Section = require('../models/Section.model');
+const Lesson = require('../models/Lesson.model');
 
 // @desc    Create course
 // @route   POST /api/instructor/courses
@@ -153,8 +155,8 @@ const createCourse = async (req, res) => {
 const getInstructorCourses = async (req, res) => {
   try {
     const {
-      page = PAGINATION.DEFAULT_PAGE,
-      limit = PAGINATION.DEFAULT_LIMIT,
+      page = 1,
+      limit = 10,
       status,
       search,
     } = req.query;
@@ -162,26 +164,50 @@ const getInstructorCourses = async (req, res) => {
     const query = { instructor: req.user._id };
 
     if (status) query.status = status;
-    if (search) {
-      query.$text = { $search: search };
-    }
+    if (search) query.$text = { $search: search };
 
     const skip = (page - 1) * limit;
+
+    // 1️⃣ Fetch paginated courses
     const courses = await Course.find(query)
       .populate('category', 'name')
       .populate('subCategory', 'name')
       .sort('-createdAt')
       .skip(skip)
-      .limit(Number(limit));
+      .limit(Number(limit))
+      .lean(); // important for modifying objects
 
+    // 2️⃣ Fetch total count
     const total = await Course.countDocuments(query);
 
-    paginatedResponse(res, 200, 'Courses fetched successfully', courses, {
+    // 3️⃣ Add sections, lessons, totalLessons
+    const coursesWithStats = await Promise.all(courses.map(async (course) => {
+      const sections = await Section.find({ course: course._id })
+        .sort('order')
+        .lean();
+
+      let totalLessons = 0;
+      const sectionsWithLessons = await Promise.all(sections.map(async (section) => {
+        const lessons = await Lesson.find({ section: section._id }).sort('order').lean();
+        totalLessons += lessons.length;
+        return { ...section, lessons };
+      }));
+
+      return {
+        ...course,
+        sections: sectionsWithLessons,
+        totalLessons,
+        totalDuration: course.totalDuration || 0,
+      };
+    }));
+
+    paginatedResponse(res, 200, 'Courses fetched successfully', coursesWithStats, {
       page: Number(page),
       limit: Number(limit),
       total,
     });
   } catch (error) {
+    console.error('getInstructorCourses error:', error);
     errorResponse(res, 500, error.message);
   }
 };
@@ -546,6 +572,33 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// @desc    Get single course by ID (instructor)
+// @route   GET /api/instructor/courses/:id
+// @access  instructor
+const getCourseInstructorById = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id)
+      .populate('instructor', 'name avatar bio instructorProfile')
+      .populate('category', 'name')
+      .populate('subCategory', 'name')
+      .populate({
+        path: 'sections',
+        populate: {
+          path: 'lessons',
+          select: 'title duration order isPreview type',
+        },
+      });
+
+    if (!course) {
+      return errorResponse(res, 404, 'Course not found');
+    }
+
+    successResponse(res, 200, 'Course fetched successfully', { course });
+  } catch (error) {
+    errorResponse(res, 500, error.message);
+  }
+};
+
 module.exports = {
   createCourse,
   getInstructorCourses,
@@ -558,4 +611,5 @@ module.exports = {
   getInstructorDashboard,
   getProfile,
   updateProfile,
+  getCourseInstructorById,
 };
