@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Upload, Video, Lock, Globe, Users, Award, DollarSign } from 'lucide-react';
+import { Upload, Video, Lock, Globe, Users, Award, DollarSign, ArrowRight, ArrowLeft } from 'lucide-react';
 import { getInstructorCategories, getInstructorCourse, updateCourse } from '../../api/instructor.api';
 import { Loader } from '../../components/common/Loader';
 import toast from 'react-hot-toast';
@@ -590,7 +590,8 @@ const EditCourse = () => {
         <div className="flex justify-between gap-4">
           <div>
             {step > 1 && (
-              <button type="button" onClick={prevStep} className="btn btn-secondary">
+              <button type="button" onClick={prevStep} className="btn btn-secondary inline-flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
                 Previous
               </button>
             )}
@@ -602,8 +603,9 @@ const EditCourse = () => {
             </button>
             
             {step < 4 ? (
-              <button type="button" onClick={nextStep} className="btn btn-primary">
+              <button type="button" onClick={nextStep} className="btn btn-primary inline-flex items-center gap-2">
                 Next Step
+                <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
               <button type="submit" disabled={loading} className="btn btn-primary flex items-center gap-2">
